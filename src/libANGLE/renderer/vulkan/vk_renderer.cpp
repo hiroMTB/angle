@@ -42,6 +42,9 @@
 #include "libANGLE/trace.h"
 #include "platform/PlatformMethods.h"
 #include "vulkan/vulkan_core.h"
+#if defined(ANGLE_PLATFORM_APPLE)
+#    include "vulkan/vulkan_metal.h"
+#endif
 
 // Consts
 namespace
@@ -3945,6 +3948,13 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
         mEnabledDeviceExtensions.push_back(VK_EXT_GLOBAL_PRIORITY_QUERY_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mPhysicalDeviceGlobalPriorityQueryFeatures);
     }
+
+#if defined(ANGLE_PLATFORM_APPLE)
+    if (ExtensionFound(VK_EXT_METAL_OBJECTS_EXTENSION_NAME, deviceExtensionNames))
+    {
+        mEnabledDeviceExtensions.push_back(VK_EXT_METAL_OBJECTS_EXTENSION_NAME);
+    }
+#endif
 }
 
 // See comment above appendDeviceExtensionFeaturesPromotedTo11.
