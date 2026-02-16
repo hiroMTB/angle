@@ -205,6 +205,10 @@ egl::Error IOSurfaceSurfaceVkMac::releaseTexImage(const gl::Context *context, EG
         return angle::ToEGL(result, EGL_BAD_SURFACE);
     }
 
+#define SKIP_CPU_READBACK
+#if SKIP_CPU_READBACK
+     return egl::NoError();
+#else
     gl::Rectangle bounds(0, 0, mWidth, mHeight);
 
     const angle::Format &dstFormat = angle::Format::Get(angle::Format::InternalFormatToID(
@@ -224,6 +228,8 @@ egl::Error IOSurfaceSurfaceVkMac::releaseTexImage(const gl::Context *context, EG
     IOSurfaceUnlock(mIOSurface, 0, nullptr);
 
     return angle::ToEGL(result, EGL_BAD_SURFACE);
+#endif
+
 }
 
 // static
